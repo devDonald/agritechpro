@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1059126543072",
+    "project_id": "agritech-pro",
+    "storage_bucket": "agritech-pro.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1059126543072:android:be31bec4f3f707fb454685",
+        "android_client_info": {
+          "package_name": "com.agritechpro.agritechpro"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1059126543072-ofu20379bq80at9dj2sbe6puibc0pgtk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCfjV4XEFRt2ukPdYJoLqJrU-PHLy4iTh4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1059126543072-ofu20379bq80at9dj2sbe6puibc0pgtk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
