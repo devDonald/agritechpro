@@ -23,8 +23,7 @@ class _AgentHomeState extends State<AgentHome> {
               fontSize: 18.0,
               fontWeight: FontWeight.bold,
             )),
-        titleSpacing: 10.0,
-
+        titleSpacing: 20.0,
       ),
       body: Container(
         child: Column(

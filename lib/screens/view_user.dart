@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:agritechpro/authentication/login.dart';
+import 'package:agritechpro/screens/edit_farmer.dart';
 import 'package:agritechpro/screens/view_profle.dart';
 import 'package:agritechpro/services/auth_service.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -16,22 +17,15 @@ import 'package:provider/provider.dart';
 
 class ViewFarmer extends StatefulWidget {
   static const String id = 'ViewFarmer';
-  final String userId, surname;
+  final String userId, name;
   final String email, phone, gender, photo, state, ward, marital;
   final String dob, address, cooperative, household;
-  final String othernames,
-      crops,
-      accountName,
-      bankName,
-      bvn,
-      accountNo,
-      town,
-      occupation;
+  final String crops, town, occupation;
 
   const ViewFarmer({
     Key key,
     this.userId,
-    this.surname,
+    this.name,
     this.email,
     this.phone,
     this.gender,
@@ -43,12 +37,7 @@ class ViewFarmer extends StatefulWidget {
     this.address,
     this.cooperative,
     this.household,
-    this.othernames,
     this.crops,
-    this.accountName,
-    this.bankName,
-    this.bvn,
-    this.accountNo,
     this.occupation,
     this.town,
   }) : super(key: key);
@@ -146,7 +135,7 @@ class _ViewFarmerState extends State<ViewFarmer> {
       appBar: AppBar(
         elevation: 3.0,
         backgroundColor: Colors.green,
-        title: Text('${widget.surname} ${widget.othernames}',
+        title: Text('${widget.name}',
             style: TextStyle(
               color: Colors.white,
               fontSize: 18.0,
@@ -187,8 +176,7 @@ class _ViewFarmerState extends State<ViewFarmer> {
                                 builder: (context) => ViewAttachedImage(
                                       image: CachedNetworkImageProvider(
                                           widget.photo),
-                                      text:
-                                          '${widget.surname} ${widget.othernames}',
+                                      text: '${widget.name}',
                                       url: widget.photo,
                                     )));
                       },
@@ -244,8 +232,8 @@ class _ViewFarmerState extends State<ViewFarmer> {
                     height: 10,
                   ),
                   Text(
-                    '${widget.surname} ${widget.othernames}',
-                    maxLines: 5,
+                    '${widget.name}',
+                    maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: Colors.black,
@@ -587,125 +575,6 @@ class _ViewFarmerState extends State<ViewFarmer> {
               ),
             ),
             SizedBox(height: 10.0),
-            Container(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  TextFieldsText(
-                    label: 'BANK DETAILS',
-                  ),
-                  SizedBox(height: 15.0),
-                  widget.bankName != ''
-                      ? Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  Container(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        AuthTextFeildLocal(
-                                          label: 'Bank Name ',
-                                        ),
-                                        Text(
-                                          widget.bankName,
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 16.0,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(height: 15.0),
-                                  //State
-                                  Container(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        AuthTextFeildLocal(
-                                          label: 'Account Name ',
-                                        ),
-                                        Text(
-                                          widget.accountName,
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 16.0,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  Container(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        AuthTextFeildLocal(
-                                          label: 'Account Number ',
-                                        ),
-                                        Text(
-                                          widget.accountNo,
-                                          maxLines: 5,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 16.0,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(height: 15.0),
-                                  //State
-                                  Container(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        AuthTextFeildLocal(
-                                          label: 'BVN ',
-                                        ),
-                                        Text(
-                                          widget.bvn,
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 16.0,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        )
-                      : Container(),
-                ],
-              ),
-            ),
             SizedBox(
               height: 30,
             ),
@@ -719,47 +588,42 @@ class _ViewFarmerState extends State<ViewFarmer> {
                 roundedEdge: 2.5,
                 onTap: () {
                   showDeleteDialog(context, widget.userId);
-                })
-            // PrimaryButton(
-            //   buttonTitle: 'Edit Profile',
-            //   width: double.infinity,
-            //   height: 45.0,
-            //   color: kButtonsOrange,
-            //   blurRadius: 7.0,
-            //   roundedEdge: 2.5,
-            //   onTap: () {
-            //     setState(() {
-            //       Navigator.push(
-            //           context,
-            //           MaterialPageRoute(
-            //               builder: (context) => EditMember(
-            //                 userId: widget.userId,
-            //                 name: widget.name,
-            //                 email: widget.email,
-            //                 address: widget.address,
-            //                 phone: widget.phone,
-            //                 gender: widget.gender,
-            //                 occupation: widget.occupation,
-            //                 state: widget.state,
-            //                 city: widget.city,
-            //                 dob: widget.dob,
-            //                 marital: widget.marital,
-            //                 month: widget.month,
-            //                 day: widget.day,
-            //                 title: widget.title,
-            //                 churchYears: widget.churchYears,
-            //                 units: widget.units,
-            //                 affiliation: widget.affiliation,
-            //                 phone1: widget.phone1,
-            //                 name1: widget.name1,
-            //                 phone2: widget.phone2,
-            //                 name2: widget.name2,
-            //                 phone3: widget.phone3,
-            //                 name3: widget.name3,
-            //               )));
-            //     });
-            //   },
-            // ),
+                }),
+            SizedBox(
+              height: 20,
+            ),
+            PrimaryButton(
+              buttonTitle: 'Edit Profile',
+              width: double.infinity,
+              height: 45.0,
+              color: Colors.lightBlueAccent,
+              blurRadius: 7.0,
+              roundedEdge: 2.5,
+              onTap: () {
+                setState(() {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => EditFarmer(
+                                userId: widget.userId,
+                                name: widget.name,
+                                email: widget.email,
+                                address: widget.address,
+                                phone: widget.phone,
+                                gender: widget.gender,
+                                occupation: widget.occupation,
+                                state: widget.state,
+                                dob: widget.dob,
+                                marital: widget.marital,
+                                ward: widget.ward,
+                                cooperative: widget.cooperative,
+                                household: widget.household,
+                                town: widget.town,
+                                crops: widget.crops,
+                              )));
+                });
+              },
+            ),
           ],
         ),
       ),

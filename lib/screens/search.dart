@@ -72,7 +72,6 @@ class _SearchState extends State<SearchName> {
                 itemBuilder: (context, index) {
                   DocumentSnapshot snap = snapshot.data.docs[index];
                   //String date = timeago.format(snap['timestamp'].toDate());
-
                   return filter == null || filter == ""
                       ? ListTile(
                           contentPadding: EdgeInsets.all(0.5),
@@ -82,7 +81,7 @@ class _SearchState extends State<SearchName> {
                           ),
                           subtitle: Container(
                             padding: EdgeInsets.only(left: 10.0),
-                            child: Text('${snap['${widget.tag}']}'),
+                            child: Text('${snap['town']}'),
                           ),
                           onTap: () {
                             setState(() {
@@ -91,8 +90,7 @@ class _SearchState extends State<SearchName> {
                                   MaterialPageRoute(
                                     builder: (context) => ViewFarmer(
                                       userId: snap['farmerId'],
-                                      surname: snap['surname'],
-                                      othernames: snap['firstName'],
+                                      name: snap['name'],
                                       occupation: snap['occupation'],
                                       address: snap['address'],
                                       phone: snap['phone'],
@@ -105,17 +103,13 @@ class _SearchState extends State<SearchName> {
                                       marital: snap['marital'],
                                       dob: snap['dob'],
                                       gender: snap['gender'],
-                                      accountName: snap['accountName'],
-                                      accountNo: snap['accountNo'],
-                                      bankName: snap['bankName'],
-                                      bvn: snap['BVN'],
                                       cooperative: snap['cooperative'],
                                       crops: snap['crops'],
                                     ),
                                   ));
                             });
                           })
-                      : '${snap['name']}  ${snap['${widget.tag}']}'
+                      : '${snap['name']}  ${snap['town']}'
                               .toLowerCase()
                               .contains(filter.toLowerCase())
                           ? ListTile(
@@ -132,7 +126,7 @@ class _SearchState extends State<SearchName> {
                                     children: [
                                       TextSpan(
                                         text:
-                                            '${snap['${widget.tag}']}.substring(filter.length)}',
+                                            '${snap['name'].substring(filter.length)}',
                                         style: TextStyle(
                                             color: Colors.black,
                                             fontWeight: FontWeight.bold),
@@ -144,7 +138,7 @@ class _SearchState extends State<SearchName> {
                               subtitle: Container(
                                 padding: EdgeInsets.only(left: 10.0),
                                 child: Text(
-                                  '${snap['${widget.tag}']}',
+                                  '${snap['town']}',
                                   style: TextStyle(
                                     color: Colors.black,
                                   ),
@@ -157,8 +151,7 @@ class _SearchState extends State<SearchName> {
                                       MaterialPageRoute(
                                         builder: (context) => ViewFarmer(
                                           userId: snap['farmerId'],
-                                          surname: snap['surname'],
-                                          othernames: snap['firstName'],
+                                          name: snap['name'],
                                           occupation: snap['occupation'],
                                           address: snap['address'],
                                           phone: snap['phone'],
@@ -171,10 +164,6 @@ class _SearchState extends State<SearchName> {
                                           marital: snap['marital'],
                                           dob: snap['dob'],
                                           gender: snap['gender'],
-                                          accountName: snap['accountName'],
-                                          accountNo: snap['accountNo'],
-                                          bankName: snap['bankName'],
-                                          bvn: snap['BVN'],
                                           cooperative: snap['cooperative'],
                                           crops: snap['crops'],
                                         ),

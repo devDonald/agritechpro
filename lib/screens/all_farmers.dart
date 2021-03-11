@@ -48,8 +48,7 @@ class _AllFarmersState extends State<AllFarmers> {
       ),
       body: Container(
         child: StreamBuilder<QuerySnapshot>(
-            stream:
-                farmersRef.orderBy('surname', descending: false).snapshots(),
+            stream: farmersRef.orderBy('name', descending: false).snapshots(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(
@@ -69,7 +68,7 @@ class _AllFarmersState extends State<AllFarmers> {
 
                     return FarmerCard(
                       image: snap['photo'],
-                      fullName: '${snap['surname']} ${snap['firstName']}',
+                      fullName: '${snap['name']}',
                       gender: snap['gender'],
                       occupation: snap['occupation'],
                       location: snap['address'],
@@ -80,8 +79,7 @@ class _AllFarmersState extends State<AllFarmers> {
                             MaterialPageRoute(
                               builder: (context) => ViewFarmer(
                                 userId: snap['farmerId'],
-                                surname: snap['surname'],
-                                othernames: snap['firstName'],
+                                name: snap['name'],
                                 occupation: snap['occupation'],
                                 address: snap['address'],
                                 phone: snap['phone'],
@@ -94,10 +92,6 @@ class _AllFarmersState extends State<AllFarmers> {
                                 marital: snap['marital'],
                                 dob: snap['dob'],
                                 gender: snap['gender'],
-                                accountName: snap['accountName'],
-                                accountNo: snap['accountNo'],
-                                bankName: snap['bankName'],
-                                bvn: snap['BVN'],
                                 cooperative: snap['cooperative'],
                                 crops: snap['crops'],
                               ),

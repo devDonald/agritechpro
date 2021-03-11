@@ -1,33 +1,45 @@
-import 'dart:io';
-
 import 'package:agritechpro/authentication/login.dart';
-import 'package:agritechpro/resources/resources.dart';
 import 'package:agritechpro/services/auth_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:image_cropper/image_cropper.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:path/path.dart' as Path;
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:provider/provider.dart';
 
-class AddFarmers extends StatefulWidget {
-  static const String id = 'AddFarmers';
+class EditFarmer extends StatefulWidget {
+  static const String id = 'EditFarmer';
+  final String userId, name;
+  final String email, phone, gender, photo, state, ward, marital;
+  final String dob, address, cooperative, household;
+  final String crops, town, occupation;
 
-  const AddFarmers({
+  const EditFarmer({
     Key key,
+    this.userId,
+    this.name,
+    this.email,
+    this.phone,
+    this.gender,
+    this.photo,
+    this.state,
+    this.ward,
+    this.marital,
+    this.dob,
+    this.address,
+    this.cooperative,
+    this.household,
+    this.crops,
+    this.town,
+    this.occupation,
   }) : super(key: key);
 
   @override
-  _AddFarmersState createState() => _AddFarmersState();
+  _EditFarmerState createState() => _EditFarmerState();
 }
 
 var isLargeScreen = false;
 
-class _AddFarmersState extends State<AddFarmers> {
+class _EditFarmerState extends State<EditFarmer> {
   bool loading = false;
   ProgressDialog pr;
   final TextEditingController _email = TextEditingController();
@@ -39,39 +51,33 @@ class _AddFarmersState extends State<AddFarmers> {
   final TextEditingController _marital = TextEditingController();
   final TextEditingController _state = TextEditingController();
   final TextEditingController _cooperative = TextEditingController();
-  final TextEditingController _year = TextEditingController();
+  final TextEditingController _dob = TextEditingController();
   final TextEditingController _household = TextEditingController();
-  final TextEditingController _month = TextEditingController();
-  final TextEditingController _day = TextEditingController();
   final TextEditingController _town = TextEditingController();
   final TextEditingController _crops = TextEditingController();
+  final TextEditingController _gender = TextEditingController();
 
-  String selectedState, selectedGender, category;
+  String selectedState;
 
   String error = '';
 
-  bool isPicked = false;
-
-  File pickedImage;
-
-  final _picker = ImagePicker();
-  getImageFile(ImageSource source) async {
-    //Clicking or Picking from Gallery
-
-    var image = await _picker.getImage(source: source);
-
-    //Cropping the image
-
-    File croppedFile = await ImageCropper.cropImage(
-      sourcePath: image.path,
-      maxWidth: 512,
-      maxHeight: 512,
-    );
-
-    setState(() {
-      pickedImage = croppedFile;
-      print(pickedImage.lengthSync());
-    });
+  @override
+  void initState() {
+    _email.text = widget.email;
+    _fullName.text = widget.name;
+    _phoneNumber.text = widget.phone;
+    _ward.text = widget.ward;
+    _address.text = widget.address;
+    _occupation.text = widget.occupation;
+    _marital.text = widget.marital;
+    _state.text = widget.state;
+    _cooperative.text = widget.cooperative;
+    _dob.text = widget.dob;
+    _household.text = widget.household;
+    _town.text = widget.town;
+    _crops.text = widget.crops;
+    _gender.text = widget.gender;
+    super.initState();
   }
 
   @override
@@ -98,7 +104,7 @@ class _AddFarmersState extends State<AddFarmers> {
       appBar: AppBar(
         elevation: 3.0,
         backgroundColor: Colors.green,
-        title: Text('Add Farmer',
+        title: Text('Edit Farmer',
             style: TextStyle(
               color: Colors.white,
               fontSize: 18.0,
@@ -118,55 +124,8 @@ class _AddFarmersState extends State<AddFarmers> {
                   Container(
                     child: Column(
                       children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.only(top: 20.0),
-                          child:
-                              new Stack(fit: StackFit.loose, children: <Widget>[
-                            new Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                new Container(
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.4,
-                                    height: MediaQuery.of(context).size.height *
-                                        0.2,
-                                    decoration: new BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      image: new DecorationImage(
-                                        image: pickedImage != null
-                                            ? FileImage(pickedImage)
-                                            : AssetImage('images/user.png'),
-                                        fit: BoxFit.cover,
-                                      ),
-                                    )),
-                              ],
-                            ),
-                            Padding(
-                                padding:
-                                    EdgeInsets.only(top: 90.0, right: 100.0),
-                                child: new Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    GestureDetector(
-                                      onTap: () async {
-                                        await getImageFile(ImageSource.camera);
-                                      },
-                                      child: new CircleAvatar(
-                                        backgroundColor: Colors.red,
-                                        radius: 25.0,
-                                        child: new Icon(
-                                          Icons.camera_alt,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                )),
-                          ]),
-                        ),
                         SizedBox(
-                          height: 10,
+                          height: 30,
                         ),
                         Container(
                           child: Column(
@@ -455,63 +414,11 @@ class _AddFarmersState extends State<AddFarmers> {
                                             formField: TextFormField(
                                               autovalidateMode: AutovalidateMode
                                                   .onUserInteraction,
-                                              controller: _day,
+                                              controller: _dob,
                                               textCapitalization:
                                                   TextCapitalization.sentences,
                                               decoration: InputDecoration(
-                                                hintText: 'DD',
-                                                border: OutlineInputBorder(
-                                                    borderSide:
-                                                        BorderSide.none),
-                                              ),
-                                              validator: (value) {
-                                                if (value.isEmpty) {
-                                                  return 'day cannot be empty';
-                                                }
-                                                return null;
-                                              },
-                                            ),
-                                          ),
-                                          Text(
-                                            '-',
-                                            style: TextStyle(fontSize: 18),
-                                          ),
-                                          AuthTextField(
-                                            width: 80,
-                                            formField: TextFormField(
-                                              autovalidateMode: AutovalidateMode
-                                                  .onUserInteraction,
-                                              controller: _month,
-                                              textCapitalization:
-                                                  TextCapitalization.sentences,
-                                              decoration: InputDecoration(
-                                                hintText: 'MM',
-                                                border: OutlineInputBorder(
-                                                    borderSide:
-                                                        BorderSide.none),
-                                              ),
-                                              validator: (value) {
-                                                if (value.isEmpty) {
-                                                  return 'month cannot be empty';
-                                                }
-                                                return null;
-                                              },
-                                            ),
-                                          ),
-                                          Text(
-                                            '-',
-                                            style: TextStyle(fontSize: 18),
-                                          ),
-                                          AuthTextField(
-                                            width: 80,
-                                            formField: TextFormField(
-                                              autovalidateMode: AutovalidateMode
-                                                  .onUserInteraction,
-                                              controller: _year,
-                                              textCapitalization:
-                                                  TextCapitalization.sentences,
-                                              decoration: InputDecoration(
-                                                hintText: 'YYYY',
+                                                hintText: 'DD-MM-YYYY',
                                                 border: OutlineInputBorder(
                                                     borderSide:
                                                         BorderSide.none),
@@ -544,29 +451,25 @@ class _AddFarmersState extends State<AddFarmers> {
                               AuthTextFeildLabel(
                                 label: 'Gender',
                               ),
-                              Container(
-                                child: DropdownButtonFormField<String>(
-                                  hint: Text('Select Gender'),
-                                  value: selectedGender,
-                                  icon: Icon(Icons.arrow_drop_down),
-                                  iconSize: 25.0,
-                                  elevation: 0,
-                                  style: TextStyle(color: Colors.black),
-                                  decoration: InputDecoration(),
-                                  onChanged: (String newValue) {
-                                    setState(() {
-                                      selectedGender = newValue;
-                                      print(selectedGender);
-                                    });
-                                  },
-                                  items: gender.map<DropdownMenuItem<String>>(
-                                      (String value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Text(value),
-                                    );
-                                  }).toList(),
-                                ),
+                              AuthTextField(
+                                width: double.infinity,
+                                formField: TextFormField(
+                                    autovalidateMode:
+                                        AutovalidateMode.onUserInteraction,
+                                    controller: _gender,
+                                    decoration: InputDecoration(
+                                      border: OutlineInputBorder(
+                                          borderSide: BorderSide.none),
+                                    ),
+                                    keyboardType: TextInputType.text,
+                                    textCapitalization:
+                                        TextCapitalization.words,
+                                    validator: (val) {
+                                      if (val.isEmpty) {
+                                        return 'enter gender';
+                                      }
+                                      return null;
+                                    }),
                               ),
                             ],
                           ),
@@ -720,99 +623,57 @@ class _AddFarmersState extends State<AddFarmers> {
                                 height: 45.0,
                                 width: double.infinity,
                                 color: Colors.green,
-                                buttonTitle: 'Add Farmer',
+                                buttonTitle: 'Submit Details',
                                 blurRadius: 7.0,
                                 roundedEdge: 2.5,
                                 onTap: () async {
                                   if (_fullName.text != '' &&
-                                      selectedGender != '' &&
+                                      _gender.text != '' &&
                                       _marital.text != '' &&
                                       _phoneNumber.text != '' &&
                                       _occupation.text != '') {
                                     try {
-                                      User _currentUser =
-                                          FirebaseAuth.instance.currentUser;
-                                      String uid = _currentUser.uid;
-                                      if (pickedImage != null) {
-                                        pr.show();
-                                        Reference storageReference =
-                                            FirebaseStorage.instance.ref().child(
-                                                'farmers/$uid/${Path.basename(pickedImage.path)}}');
-                                        UploadTask uploadTask = storageReference
-                                            .putFile(pickedImage);
-                                        await uploadTask;
-                                        print('File Uploaded');
-                                        storageReference
-                                            .getDownloadURL()
-                                            .then((fileURL) async {
-                                          String photo = fileURL;
-                                          DocumentReference _docRef =
-                                              farmersRef.doc();
-                                          await _docRef.set({
-                                            'email': _email.text,
-                                            'phone': _phoneNumber.text,
-                                            'gender': selectedGender,
-                                            'state': _state.text,
-                                            'occupation': _occupation.text,
-                                            'address': _address.text,
-                                            'day': _day.text,
-                                            'month': _month.text,
-                                            'farmerId': _docRef.id,
-                                            'FIN': _docRef.id.toUpperCase(),
-                                            'marital': _marital.text,
-                                            'ward': _ward.text,
-                                            'name': _fullName.text,
-                                            'cooperative': _cooperative.text,
-                                            'dob':
-                                                '${_day.text}-${_month.text}-${_year.text}',
-                                            'year': _year.text,
-                                            'household': _household.text,
-                                            'crops': _crops.text,
-                                            'town': _town.text,
-                                            'photo': photo
-                                          }).then((value) async {
-                                            pr.hide();
+                                      DocumentReference _docRef =
+                                          farmersRef.doc(widget.userId);
+                                      await _docRef.update({
+                                        'email': _email.text,
+                                        'phone': _phoneNumber.text,
+                                        'gender': _gender.text,
+                                        'state': _state.text,
+                                        'occupation': _occupation.text,
+                                        'address': _address.text,
+                                        'marital': _marital.text,
+                                        'ward': _ward.text,
+                                        'name': _fullName.text,
+                                        'cooperative': _cooperative.text,
+                                        'dob': _dob.text,
+                                        'household': _household.text,
+                                        'crops': _crops.text,
+                                        'town': _town.text,
+                                      }).then((value) async {
+                                        pr.hide();
 
-                                            Fluttertoast.showToast(
-                                                msg: "Successful",
-                                                toastLength: Toast.LENGTH_SHORT,
-                                                gravity: ToastGravity.CENTER,
-                                                timeInSecForIosWeb: 1,
-                                                backgroundColor: Colors.green,
-                                                textColor: Colors.white,
-                                                fontSize: 16.0);
-                                            if (mounted) {
-                                              setState(() {
-                                                _email.clear();
-                                                _fullName.clear();
-                                                _phoneNumber.clear();
-                                                _ward.clear();
-                                                _address.clear();
-                                                _occupation.clear();
-                                                _marital.clear();
-                                                _state.clear();
-                                                _cooperative.clear();
-                                                _year.clear();
-                                                _household.clear();
-                                                _crops.clear();
-                                                _day.clear();
-                                                _month.clear();
-                                              });
-                                            }
-                                            Navigator.of(context);
-                                          }).catchError((onError) async {
-                                            pr.hide();
-                                            Fluttertoast.showToast(
-                                                msg: "failed try again",
-                                                toastLength: Toast.LENGTH_SHORT,
-                                                gravity: ToastGravity.CENTER,
-                                                timeInSecForIosWeb: 1,
-                                                backgroundColor: Colors.red,
-                                                textColor: Colors.white,
-                                                fontSize: 16.0);
-                                          });
-                                        });
-                                      }
+                                        Fluttertoast.showToast(
+                                            msg: "Successful",
+                                            toastLength: Toast.LENGTH_SHORT,
+                                            gravity: ToastGravity.CENTER,
+                                            timeInSecForIosWeb: 1,
+                                            backgroundColor: Colors.green,
+                                            textColor: Colors.white,
+                                            fontSize: 16.0);
+
+                                        Navigator.of(context).pop();
+                                      }).catchError((onError) async {
+                                        pr.hide();
+                                        Fluttertoast.showToast(
+                                            msg: "failed try again",
+                                            toastLength: Toast.LENGTH_SHORT,
+                                            gravity: ToastGravity.CENTER,
+                                            timeInSecForIosWeb: 1,
+                                            backgroundColor: Colors.red,
+                                            textColor: Colors.white,
+                                            fontSize: 16.0);
+                                      });
                                     } catch (e) {}
                                   } else {
                                     setState(() {
@@ -841,97 +702,6 @@ class _AddFarmersState extends State<AddFarmers> {
               ),
             ),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class DoBPicker extends StatelessWidget {
-  const DoBPicker({
-    Key key,
-    this.onTap,
-    this.dob,
-  }) : super(key: key);
-  final Function onTap;
-  final String dob;
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Align(
-        alignment: Alignment.centerLeft,
-        child: Container(
-          width: double.infinity,
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                color: Colors.black,
-                width: 0.5,
-              ),
-            ),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Date of Birth'),
-              SizedBox(height: 8),
-              Text(dob),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class DatePicker extends StatefulWidget {
-  const DatePicker({
-    Key key,
-    this.onTap,
-    this.info,
-    this.icon,
-  }) : super(key: key);
-  final Function onTap;
-  final String info;
-  final IconData icon;
-  @override
-  _DatePickerState createState() => _DatePickerState();
-}
-
-class _DatePickerState extends State<DatePicker> {
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: widget.onTap,
-      child: Container(
-        // width: 80,
-        margin: EdgeInsets.only(top: 10),
-        padding: EdgeInsets.only(
-          left: 5,
-          right: 5,
-          top: 8,
-          bottom: 8,
-        ),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(5),
-          boxShadow: [
-            BoxShadow(
-              blurRadius: 8,
-              color: Colors.black26,
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Text(widget.info),
-            SizedBox(width: 3),
-            Container(
-              child: Icon(widget.icon, size: 20),
-            ),
-          ],
         ),
       ),
     );
