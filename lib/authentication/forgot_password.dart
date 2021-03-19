@@ -36,7 +36,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   Center(
                     child: Column(
                       children: <Widget>[
-                        AbasuLogo(
+                        Image.asset(
+                          'images/logo.png',
                           width: 101.1,
                           height: 92.7,
                         ),

@@ -20,7 +20,7 @@ class ViewFarmer extends StatefulWidget {
   final String userId, name;
   final String email, phone, gender, photo, state, ward, marital;
   final String dob, address, cooperative, household;
-  final String crops, town, occupation;
+  final String crops, town, occupation, fin;
 
   const ViewFarmer({
     Key key,
@@ -40,6 +40,7 @@ class ViewFarmer extends StatefulWidget {
     this.crops,
     this.occupation,
     this.town,
+    this.fin,
   }) : super(key: key);
 
   @override
@@ -477,6 +478,28 @@ class _ViewFarmerState extends State<ViewFarmer> {
                         color: Colors.black,
                         fontSize: 16.0,
                       ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Container(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  AuthTextFeildLocal(
+                    label: 'Farmers Identification Number (FIN)',
+                  ),
+                  Text(
+                    widget.fin,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 14.0,
                     ),
                   ),
                 ],

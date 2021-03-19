@@ -1,4 +1,3 @@
-import 'package:agritechpro/resources/resources.dart';
 import 'package:flutter/material.dart';
 
 import 'login.dart';
@@ -26,7 +25,8 @@ class _ResetPasswordState extends State<ResetPassword> {
             SizedBox(
               height: 39.8,
             ),
-            AbasuLogo(
+            Image.asset(
+              'images/logo.png',
               width: 101.1,
               height: 92.7,
             ),

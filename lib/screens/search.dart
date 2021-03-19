@@ -42,11 +42,12 @@ class _SearchState extends State<SearchName> {
         appBar: AppBar(
           elevation: 3.0,
           titleSpacing: -15.0,
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.red,
           title: new TextFormField(
             textCapitalization: TextCapitalization.sentences,
             controller: searchController,
             decoration: InputDecoration(
+              hintStyle: TextStyle(color: Colors.white),
               border: InputBorder.none,
               hintText: 'Search by name ...',
               contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
@@ -102,6 +103,7 @@ class _SearchState extends State<SearchName> {
                                       ward: snap['ward'],
                                       marital: snap['marital'],
                                       dob: snap['dob'],
+                                      fin: snap['FIN'],
                                       gender: snap['gender'],
                                       cooperative: snap['cooperative'],
                                       crops: snap['crops'],
@@ -163,6 +165,7 @@ class _SearchState extends State<SearchName> {
                                           ward: snap['ward'],
                                           marital: snap['marital'],
                                           dob: snap['dob'],
+                                          fin: snap['FIN'],
                                           gender: snap['gender'],
                                           cooperative: snap['cooperative'],
                                           crops: snap['crops'],

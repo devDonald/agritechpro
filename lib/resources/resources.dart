@@ -1,31 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 List<String> gender = ['Male', 'Female'];
 
-String abasuLogo = 'images/logo.svg';
-
-class AbasuLogo extends StatelessWidget {
-  const AbasuLogo({
-    this.width,
-    this.height,
-  });
-  final double width;
-  final double height;
-
-  @override
-  Widget build(BuildContext context) {
-    return SvgPicture.asset(
-      abasuLogo,
-      width: width,
-      height: height,
-      color: Colors.green,
-    );
-  }
-}
-
 class FarmerCard extends StatelessWidget {
-  final String image, fullName, gender, occupation, fin, location;
+  final String image, fullName, gender, occupation, location;
   final Function onTap;
 
   const FarmerCard({
@@ -34,7 +12,6 @@ class FarmerCard extends StatelessWidget {
     this.fullName,
     this.gender,
     this.occupation,
-    this.fin,
     this.location,
     this.onTap,
   }) : super(key: key);
@@ -46,7 +23,7 @@ class FarmerCard extends StatelessWidget {
       onTap: onTap,
       child: Container(
         width: (screenSize.width - 20) / 2,
-        height: 130.0,
+        height: 120.0,
         margin: EdgeInsets.only(
           top: 10.0,
           left: 10.0,
@@ -71,7 +48,7 @@ class FarmerCard extends StatelessWidget {
           children: [
             Image.network(
               image,
-              height: 120.0,
+              height: 100.0,
               width: 100.0,
             ),
             Expanded(
@@ -99,10 +76,6 @@ class FarmerCard extends StatelessWidget {
                   ),
                   SizedBox(
                     height: 2,
-                  ),
-                  TextBody(
-                    title: fin,
-                    icon: Icons.category,
                   ),
                   TextBody(
                     title: location,

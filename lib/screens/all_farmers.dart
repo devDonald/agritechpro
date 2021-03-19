@@ -72,7 +72,6 @@ class _AllFarmersState extends State<AllFarmers> {
                       gender: snap['gender'],
                       occupation: snap['occupation'],
                       location: snap['address'],
-                      fin: snap['FIN'],
                       onTap: () {
                         Navigator.push(
                             context,
@@ -85,6 +84,7 @@ class _AllFarmersState extends State<AllFarmers> {
                                 phone: snap['phone'],
                                 email: snap['email'],
                                 photo: snap['photo'],
+                                fin: snap['FIN'],
                                 household: snap['household'],
                                 town: snap['town'],
                                 state: snap['state'],
