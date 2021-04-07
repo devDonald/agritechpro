@@ -12,7 +12,6 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as Path;
 import 'package:progress_dialog/progress_dialog.dart';
-import 'package:provider/provider.dart';
 
 class AddFarmers extends StatefulWidget {
   static const String id = 'AddFarmers';
@@ -39,10 +38,8 @@ class _AddFarmersState extends State<AddFarmers> {
   final TextEditingController _marital = TextEditingController();
   final TextEditingController _state = TextEditingController();
   final TextEditingController _cooperative = TextEditingController();
-  final TextEditingController _year = TextEditingController();
+  final TextEditingController _age = TextEditingController();
   final TextEditingController _household = TextEditingController();
-  final TextEditingController _month = TextEditingController();
-  final TextEditingController _day = TextEditingController();
   final TextEditingController _town = TextEditingController();
   final TextEditingController _crops = TextEditingController();
 
@@ -74,10 +71,37 @@ class _AddFarmersState extends State<AddFarmers> {
     });
   }
 
+  bool _isConnected;
+
+  // This function is triggered when the floating button is pressed
+  Future<void> _checkInternetConnection() async {
+    try {
+      final response = await InternetAddress.lookup('www.kindacode.com');
+      if (response.isNotEmpty) {
+        setState(() {
+          _isConnected = true;
+        });
+        print('isConnected:$_isConnected');
+      }
+    } on SocketException catch (err) {
+      setState(() {
+        _isConnected = false;
+      });
+      print('isConnected:$_isConnected');
+
+      print(err);
+    }
+  }
+
+  // This will check the connection at the beginning
+  @override
+  void initState() {
+    _checkInternetConnection();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final auth = Provider.of<AuthService>(context, listen: false);
-
     pr = new ProgressDialog(context);
     pr.style(message: 'Please wait, Adding Farmer');
 
@@ -441,7 +465,7 @@ class _AddFarmersState extends State<AddFarmers> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
                                     AuthTextFeildLabel(
-                                      label: 'Date of Birth',
+                                      label: 'Age',
                                     ),
                                     Container(
                                       width: MediaQuery.of(context).size.width /
@@ -451,67 +475,21 @@ class _AddFarmersState extends State<AddFarmers> {
                                             MainAxisAlignment.start,
                                         children: [
                                           AuthTextField(
-                                            width: 80,
+                                            width: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    2.3 +
+                                                1,
                                             formField: TextFormField(
                                               autovalidateMode: AutovalidateMode
                                                   .onUserInteraction,
-                                              controller: _day,
+                                              controller: _age,
                                               textCapitalization:
                                                   TextCapitalization.sentences,
+                                              keyboardType:
+                                                  TextInputType.number,
                                               decoration: InputDecoration(
-                                                hintText: 'DD',
-                                                border: OutlineInputBorder(
-                                                    borderSide:
-                                                        BorderSide.none),
-                                              ),
-                                              validator: (value) {
-                                                if (value.isEmpty) {
-                                                  return 'day cannot be empty';
-                                                }
-                                                return null;
-                                              },
-                                            ),
-                                          ),
-                                          Text(
-                                            '-',
-                                            style: TextStyle(fontSize: 18),
-                                          ),
-                                          AuthTextField(
-                                            width: 80,
-                                            formField: TextFormField(
-                                              autovalidateMode: AutovalidateMode
-                                                  .onUserInteraction,
-                                              controller: _month,
-                                              textCapitalization:
-                                                  TextCapitalization.sentences,
-                                              decoration: InputDecoration(
-                                                hintText: 'MM',
-                                                border: OutlineInputBorder(
-                                                    borderSide:
-                                                        BorderSide.none),
-                                              ),
-                                              validator: (value) {
-                                                if (value.isEmpty) {
-                                                  return 'month cannot be empty';
-                                                }
-                                                return null;
-                                              },
-                                            ),
-                                          ),
-                                          Text(
-                                            '-',
-                                            style: TextStyle(fontSize: 18),
-                                          ),
-                                          AuthTextField(
-                                            width: 80,
-                                            formField: TextFormField(
-                                              autovalidateMode: AutovalidateMode
-                                                  .onUserInteraction,
-                                              controller: _year,
-                                              textCapitalization:
-                                                  TextCapitalization.sentences,
-                                              decoration: InputDecoration(
-                                                hintText: 'YYYY',
+                                                hintText: 'eg 30',
                                                 border: OutlineInputBorder(
                                                     borderSide:
                                                         BorderSide.none),
@@ -579,7 +557,7 @@ class _AddFarmersState extends State<AddFarmers> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               AuthTextFeildLabel(
-                                label: 'Name of Cooperative',
+                                label: 'Cluster Name',
                               ),
                               AuthTextField(
                                 width: double.infinity,
@@ -694,7 +672,8 @@ class _AddFarmersState extends State<AddFarmers> {
                                           border: OutlineInputBorder(
                                               borderSide: BorderSide.none),
                                         ),
-                                        keyboardType: TextInputType.number,
+                                        keyboardType: TextInputType.phone,
+                                        maxLength: 11,
                                         validator: (value) {
                                           if (value.isEmpty) {
                                             return 'Please enter phone number';
@@ -724,100 +703,165 @@ class _AddFarmersState extends State<AddFarmers> {
                                 blurRadius: 7.0,
                                 roundedEdge: 2.5,
                                 onTap: () async {
-                                  if (_fullName.text != '' &&
-                                      selectedGender != '' &&
-                                      _marital.text != '' &&
-                                      _phoneNumber.text != '' &&
-                                      _occupation.text != '') {
-                                    try {
-                                      User _currentUser =
-                                          FirebaseAuth.instance.currentUser;
-                                      String uid = _currentUser.uid;
-                                      if (pickedImage != null) {
-                                        pr.show();
-                                        Reference storageReference =
-                                            FirebaseStorage.instance.ref().child(
-                                                'farmers/$uid/${Path.basename(pickedImage.path)}}');
-                                        UploadTask uploadTask = storageReference
-                                            .putFile(pickedImage);
-                                        await uploadTask;
-                                        print('File Uploaded');
-                                        storageReference
-                                            .getDownloadURL()
-                                            .then((fileURL) async {
-                                          String photo = fileURL;
-                                          DocumentReference _docRef =
-                                              farmersRef.doc();
-                                          await _docRef.set({
-                                            'email': _email.text,
-                                            'phone': _phoneNumber.text,
-                                            'gender': selectedGender,
-                                            'state': _state.text,
-                                            'occupation': _occupation.text,
-                                            'address': _address.text,
-                                            'day': _day.text,
-                                            'month': _month.text,
-                                            'farmerId': _docRef.id,
-                                            'FIN': _docRef.id.toUpperCase(),
-                                            'marital': _marital.text,
-                                            'ward': _ward.text,
-                                            'name': _fullName.text,
-                                            'cooperative': _cooperative.text,
-                                            'dob':
-                                                '${_day.text}-${_month.text}-${_year.text}',
-                                            'year': _year.text,
-                                            'household': _household.text,
-                                            'crops': _crops.text,
-                                            'town': _town.text,
-                                            'photo': photo
-                                          }).then((value) async {
-                                            pr.hide();
+                                  if (_isConnected) {
+                                    if (_fullName.text != '' &&
+                                        selectedGender != '' &&
+                                        _marital.text != '' &&
+                                        _phoneNumber.text != '' &&
+                                        _occupation.text != '') {
+                                      try {
+                                        User _currentUser =
+                                            FirebaseAuth.instance.currentUser;
+                                        String uid = _currentUser.uid;
+                                        if (pickedImage != null) {
+                                          pr.show();
+                                          Reference storageReference =
+                                              FirebaseStorage.instance.ref().child(
+                                                  'farmers/$uid/${Path.basename(pickedImage.path)}}');
+                                          UploadTask uploadTask =
+                                              storageReference
+                                                  .putFile(pickedImage);
+                                          await uploadTask;
+                                          print('File Uploaded');
+                                          storageReference
+                                              .getDownloadURL()
+                                              .then((fileURL) async {
+                                            String photo = fileURL;
+                                            DocumentReference _docRef =
+                                                farmersRef.doc();
+                                            await _docRef.set({
+                                              'email': _email.text,
+                                              'phone': _phoneNumber.text,
+                                              'gender': selectedGender,
+                                              'state': _state.text,
+                                              'occupation': _occupation.text,
+                                              'address': _address.text,
+                                              'farmerId': _docRef.id,
+                                              'FIN': _docRef.id.toUpperCase(),
+                                              'marital': _marital.text,
+                                              'ward': _ward.text,
+                                              'receivedItems':'',
+                                              'hasReceived':false,
+                                              'name': _fullName.text,
+                                              'cooperative': _cooperative.text,
+                                              'year': _age.text,
+                                              'household': _household.text,
+                                              'crops': _crops.text,
+                                              'town': _town.text,
+                                              'photo': photo
+                                            }).then((value) async {
+                                              pr.hide();
 
-                                            Fluttertoast.showToast(
-                                                msg: "Successful",
-                                                toastLength: Toast.LENGTH_SHORT,
-                                                gravity: ToastGravity.CENTER,
-                                                timeInSecForIosWeb: 1,
-                                                backgroundColor: Colors.green,
-                                                textColor: Colors.white,
-                                                fontSize: 16.0);
-                                            if (mounted) {
-                                              setState(() {
-                                                _email.clear();
-                                                _fullName.clear();
-                                                _phoneNumber.clear();
-                                                _ward.clear();
-                                                _address.clear();
-                                                _occupation.clear();
-                                                _marital.clear();
-                                                _state.clear();
-                                                _cooperative.clear();
-                                                _year.clear();
-                                                _household.clear();
-                                                _crops.clear();
-                                                _day.clear();
-                                                _month.clear();
-                                              });
-                                            }
-                                            Navigator.of(context);
-                                          }).catchError((onError) async {
-                                            pr.hide();
-                                            Fluttertoast.showToast(
-                                                msg: "failed try again",
-                                                toastLength: Toast.LENGTH_SHORT,
-                                                gravity: ToastGravity.CENTER,
-                                                timeInSecForIosWeb: 1,
-                                                backgroundColor: Colors.red,
-                                                textColor: Colors.white,
-                                                fontSize: 16.0);
+                                              Fluttertoast.showToast(
+                                                  msg: "Successful",
+                                                  toastLength:
+                                                      Toast.LENGTH_SHORT,
+                                                  gravity: ToastGravity.CENTER,
+                                                  timeInSecForIosWeb: 1,
+                                                  backgroundColor: Colors.green,
+                                                  textColor: Colors.white,
+                                                  fontSize: 16.0);
+                                              if (mounted) {
+                                                setState(() {
+                                                  _email.clear();
+                                                  _fullName.clear();
+                                                  _phoneNumber.clear();
+                                                  _ward.clear();
+                                                  _address.clear();
+                                                  _occupation.clear();
+                                                  _marital.clear();
+                                                  _state.clear();
+                                                  _cooperative.clear();
+                                                  _age.clear();
+                                                  _household.clear();
+                                                  _crops.clear();
+                                                });
+                                              }
+                                              Navigator.of(context);
+                                            }).catchError((onError) async {
+                                              pr.hide();
+                                              Fluttertoast.showToast(
+                                                  msg: "failed try again",
+                                                  toastLength:
+                                                      Toast.LENGTH_SHORT,
+                                                  gravity: ToastGravity.CENTER,
+                                                  timeInSecForIosWeb: 1,
+                                                  backgroundColor: Colors.red,
+                                                  textColor: Colors.white,
+                                                  fontSize: 16.0);
+                                            });
                                           });
+                                        }
+                                      } catch (e) {}
+                                    } else {
+                                      setState(() {
+                                        error = 'complete all required fields';
+                                      });
+                                    }
+                                  } else {
+                                    if (_fullName.text != '' &&
+                                        selectedGender != '' &&
+                                        _marital.text != '' &&
+                                        _phoneNumber.text != '' &&
+                                        _occupation.text != '') {
+                                      pr.show();
+                                      try {
+                                        DocumentReference _docRef =
+                                            farmersRef.doc();
+                                        _docRef.set({
+                                          'email': _email.text,
+                                          'phone': _phoneNumber.text,
+                                          'gender': selectedGender,
+                                          'state': _state.text,
+                                          'occupation': _occupation.text,
+                                          'address': _address.text,
+                                          'farmerId': _docRef.id,
+                                          'FIN': _docRef.id.toUpperCase(),
+                                          'marital': _marital.text,
+                                          'ward': _ward.text,
+                                          'receivedItems':'',
+                                          'hasReceived':false,
+                                          'year': _age.text,
+                                          'name': _fullName.text,
+                                          'cooperative': _cooperative.text,
+                                          'household': _household.text,
+                                          'crops': _crops.text,
+                                          'town': _town.text,
+                                          'photo': ''
+                                        });
+                                      } catch (e) {}
+
+                                      pr.hide();
+                                      Fluttertoast.showToast(
+                                          msg: "Successful",
+                                          toastLength: Toast.LENGTH_SHORT,
+                                          gravity: ToastGravity.CENTER,
+                                          timeInSecForIosWeb: 1,
+                                          backgroundColor: Colors.green,
+                                          textColor: Colors.white,
+                                          fontSize: 16.0);
+                                      if (mounted) {
+                                        setState(() {
+                                          _email.clear();
+                                          _fullName.clear();
+                                          _phoneNumber.clear();
+                                          _ward.clear();
+                                          _address.clear();
+                                          _occupation.clear();
+                                          _marital.clear();
+                                          _state.clear();
+                                          _cooperative.clear();
+                                          _age.clear();
+                                          _household.clear();
+                                          _crops.clear();
                                         });
                                       }
-                                    } catch (e) {}
-                                  } else {
-                                    setState(() {
-                                      error = 'complete all required fields';
-                                    });
+                                      //Navigator.of(context).pop();
+                                    } else {
+                                      setState(() {
+                                        error = 'complete all required fields';
+                                      });
+                                    }
                                   }
                                 },
                               ),

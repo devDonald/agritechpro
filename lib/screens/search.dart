@@ -19,9 +19,11 @@ class SearchName extends StatefulWidget {
 class _SearchState extends State<SearchName> {
   TextEditingController searchController = new TextEditingController();
   String filter;
+  Stream _search;
 
   @override
   initState() {
+    _search = farmersRef.orderBy('name', descending: false).snapshots();
     searchController.addListener(() {
       setState(() {
         filter = searchController.text;
@@ -42,7 +44,7 @@ class _SearchState extends State<SearchName> {
         appBar: AppBar(
           elevation: 3.0,
           titleSpacing: -15.0,
-          backgroundColor: Colors.red,
+          backgroundColor: Colors.green,
           title: new TextFormField(
             textCapitalization: TextCapitalization.sentences,
             controller: searchController,
@@ -64,7 +66,7 @@ class _SearchState extends State<SearchName> {
           ],
         ),
         body: StreamBuilder<QuerySnapshot>(
-            stream: farmersRef.orderBy('name', descending: false).snapshots(),
+            stream: _search,
             builder: (context, snapshot) {
               return new ListView.builder(
                 physics: BouncingScrollPhysics(),
@@ -101,8 +103,9 @@ class _SearchState extends State<SearchName> {
                                       town: snap['town'],
                                       state: snap['state'],
                                       ward: snap['ward'],
+                                      receivedItems: snap['receivedItems'],
                                       marital: snap['marital'],
-                                      dob: snap['dob'],
+                                      dob: snap['year'],
                                       fin: snap['FIN'],
                                       gender: snap['gender'],
                                       cooperative: snap['cooperative'],
@@ -157,6 +160,7 @@ class _SearchState extends State<SearchName> {
                                           occupation: snap['occupation'],
                                           address: snap['address'],
                                           phone: snap['phone'],
+                                          receivedItems: snap['receivedItems'],
                                           email: snap['email'],
                                           photo: snap['photo'],
                                           household: snap['household'],
@@ -164,7 +168,7 @@ class _SearchState extends State<SearchName> {
                                           state: snap['state'],
                                           ward: snap['ward'],
                                           marital: snap['marital'],
-                                          dob: snap['dob'],
+                                          dob: snap['year'],
                                           fin: snap['FIN'],
                                           gender: snap['gender'],
                                           cooperative: snap['cooperative'],

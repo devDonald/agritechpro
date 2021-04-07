@@ -11,7 +11,7 @@ class EditFarmer extends StatefulWidget {
   final String userId, name;
   final String email, phone, gender, photo, state, ward, marital;
   final String dob, address, cooperative, household;
-  final String crops, town, occupation;
+  final String crops, town, occupation, receivedItems;
 
   const EditFarmer({
     Key key,
@@ -31,6 +31,7 @@ class EditFarmer extends StatefulWidget {
     this.crops,
     this.town,
     this.occupation,
+    this.receivedItems,
   }) : super(key: key);
 
   @override
@@ -56,6 +57,7 @@ class _EditFarmerState extends State<EditFarmer> {
   final TextEditingController _town = TextEditingController();
   final TextEditingController _crops = TextEditingController();
   final TextEditingController _gender = TextEditingController();
+  final TextEditingController _received = TextEditingController();
 
   String selectedState;
 
@@ -77,6 +79,7 @@ class _EditFarmerState extends State<EditFarmer> {
     _town.text = widget.town;
     _crops.text = widget.crops;
     _gender.text = widget.gender;
+    _received.text = widget.receivedItems;
     super.initState();
   }
 
@@ -400,7 +403,7 @@ class _EditFarmerState extends State<EditFarmer> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
                                     AuthTextFeildLabel(
-                                      label: 'Date of Birth',
+                                      label: 'Age',
                                     ),
                                     Container(
                                       width: MediaQuery.of(context).size.width /
@@ -418,7 +421,7 @@ class _EditFarmerState extends State<EditFarmer> {
                                               textCapitalization:
                                                   TextCapitalization.sentences,
                                               decoration: InputDecoration(
-                                                hintText: 'DD-MM-YYYY',
+                                                hintText: '30',
                                                 border: OutlineInputBorder(
                                                     borderSide:
                                                         BorderSide.none),
@@ -482,7 +485,7 @@ class _EditFarmerState extends State<EditFarmer> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               AuthTextFeildLabel(
-                                label: 'Name of Cooperative',
+                                label: 'Cluster Name',
                               ),
                               AuthTextField(
                                 width: double.infinity,
@@ -609,6 +612,49 @@ class _EditFarmerState extends State<EditFarmer> {
                                   ),
                                 ],
                               ),
+                              SizedBox(
+                                height: 15,
+                              ),
+                              Container(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    AuthTextFeildLabel(
+                                      label: 'Received Items',
+                                    ),
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Expanded(
+                                          flex: 4,
+                                          child: AuthTextField(
+                                            formField: TextFormField(
+                                              autovalidateMode: AutovalidateMode
+                                                  .onUserInteraction,
+                                              controller: _received,
+                                              decoration: InputDecoration(
+                                                border: OutlineInputBorder(
+                                                    borderSide:
+                                                        BorderSide.none),
+                                              ),
+                                              keyboardType:
+                                                  TextInputType.number,
+                                              validator: (value) {
+                                                if (value.isEmpty) {
+                                                  return 'Please enter received items';
+                                                }
+                                                return null;
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(height: 10.0),
+                                  ],
+                                ),
+                              ),
                               SizedBox(height: 10.0),
                             ],
                           ),
@@ -645,6 +691,7 @@ class _EditFarmerState extends State<EditFarmer> {
                                         'marital': _marital.text,
                                         'ward': _ward.text,
                                         'name': _fullName.text,
+                                        'receivedItems': _received.text,
                                         'cooperative': _cooperative.text,
                                         'dob': _dob.text,
                                         'household': _household.text,

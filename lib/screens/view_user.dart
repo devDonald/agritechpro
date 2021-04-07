@@ -20,7 +20,7 @@ class ViewFarmer extends StatefulWidget {
   final String userId, name;
   final String email, phone, gender, photo, state, ward, marital;
   final String dob, address, cooperative, household;
-  final String crops, town, occupation, fin;
+  final String crops, town, occupation, fin, receivedItems;
 
   const ViewFarmer({
     Key key,
@@ -41,6 +41,7 @@ class ViewFarmer extends StatefulWidget {
     this.occupation,
     this.town,
     this.fin,
+    this.receivedItems,
   }) : super(key: key);
 
   @override
@@ -433,14 +434,14 @@ class _ViewFarmerState extends State<ViewFarmer> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         AuthTextFeildLocal(
-                          label: 'Date of Birth',
+                          label: 'Age',
                         ),
                         Container(
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               Text(
-                                widget.dob,
+                                '${widget.dob} Years',
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
@@ -513,7 +514,7 @@ class _ViewFarmerState extends State<ViewFarmer> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   AuthTextFeildLocal(
-                    label: 'Name of Cooperative',
+                    label: 'Cluster Name',
                   ),
                   Text(
                     widget.cooperative,
@@ -597,6 +598,32 @@ class _ViewFarmerState extends State<ViewFarmer> {
                 ],
               ),
             ),
+            SizedBox(
+              height: 15,
+            ),
+            Container(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  AuthTextFeildLocal(
+                    label: 'Received Items',
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        widget.receivedItems,
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16.0,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10.0),
+                ],
+              ),
+            ),
             SizedBox(height: 10.0),
             SizedBox(
               height: 30,
@@ -612,6 +639,17 @@ class _ViewFarmerState extends State<ViewFarmer> {
                 onTap: () {
                   showDeleteDialog(context, widget.userId);
                 }),
+            SizedBox(
+              height: 20,
+            ),
+            PrimaryButton(
+                buttonTitle: 'Add Received Items',
+                width: double.infinity,
+                height: 45.0,
+                color: Colors.red,
+                blurRadius: 7.0,
+                roundedEdge: 2.5,
+                onTap: () {}),
             SizedBox(
               height: 20,
             ),

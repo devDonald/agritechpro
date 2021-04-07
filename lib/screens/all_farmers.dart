@@ -13,6 +13,15 @@ class AllFarmers extends StatefulWidget {
 }
 
 class _AllFarmersState extends State<AllFarmers> {
+  Stream _farmers;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    _farmers = farmersRef.orderBy('name', descending: false).snapshots();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,7 +57,7 @@ class _AllFarmersState extends State<AllFarmers> {
       ),
       body: Container(
         child: StreamBuilder<QuerySnapshot>(
-            stream: farmersRef.orderBy('name', descending: false).snapshots(),
+            stream: _farmers,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(
@@ -70,6 +79,7 @@ class _AllFarmersState extends State<AllFarmers> {
                       image: snap['photo'],
                       fullName: '${snap['name']}',
                       gender: snap['gender'],
+                      hasReceived: snap['hasReceived'],
                       occupation: snap['occupation'],
                       location: snap['address'],
                       onTap: () {
@@ -88,9 +98,10 @@ class _AllFarmersState extends State<AllFarmers> {
                                 household: snap['household'],
                                 town: snap['town'],
                                 state: snap['state'],
+                                receivedItems: snap['receivedItems'],
                                 ward: snap['ward'],
                                 marital: snap['marital'],
-                                dob: snap['dob'],
+                                dob: snap['year'],
                                 gender: snap['gender'],
                                 cooperative: snap['cooperative'],
                                 crops: snap['crops'],

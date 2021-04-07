@@ -5,6 +5,7 @@ List<String> gender = ['Male', 'Female'];
 class FarmerCard extends StatelessWidget {
   final String image, fullName, gender, occupation, location;
   final Function onTap;
+  final bool hasReceived;
 
   const FarmerCard({
     Key key,
@@ -14,6 +15,7 @@ class FarmerCard extends StatelessWidget {
     this.occupation,
     this.location,
     this.onTap,
+    this.hasReceived,
   }) : super(key: key);
 
   @override
@@ -81,6 +83,21 @@ class FarmerCard extends StatelessWidget {
                     title: location,
                     icon: Icons.location_on,
                   ),
+                  hasReceived
+                      ? Align(
+                          alignment: Alignment.bottomRight,
+                          child: Icon(
+                            Icons.verified,
+                            color: Colors.green,
+                          ),
+                        )
+                      : Align(
+                          alignment: Alignment.bottomRight,
+                          child: Icon(
+                            Icons.cancel,
+                            color: Colors.red,
+                          ),
+                        )
                 ],
               ),
             )
